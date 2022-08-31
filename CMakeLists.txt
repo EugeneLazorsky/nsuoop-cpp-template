@@ -7,27 +7,30 @@ set(CMAKE_CXX_STANDARD 17)
 # TODO: переименовать проект
 project(nsuoop-cpp-template)
 
-# описываем основную библиотеку, т.е. библиотеку, содержащую все cpp-файлы, кроме main.cpp
-# TODO: отредактировать список cpp-файлов
-add_library(corelib OBJECT task1.cpp task2.cpp)
-
 # задаем имя исполняемого файла основной программы
 set(exe_name ${PROJECT_NAME})
 
 # задаем имя исполняемого файла программы для запуска тестов
 set(test_name test)
 
-# описываем исполняемый файл основной программы: это main.cpp + основная библиотека
-add_executable(${exe_name} main.cpp)
-target_link_libraries(${exe_name} corelib)
-
 # Включаем отслеживание всех предупреждений (warnings) и запрещаем компиляцию при наличии предупреждений.
 # Считается хорошим тоном, когда программа собирается без предупрреждений.
 # Но вы можете убрать /WX и -Werror (разрешив компиляцию с предупреждениями), если сможете разумно объяснить своё решение.
-target_compile_options(${exe_name} PRIVATE
-  $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
-  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
-)
+if (MSVC)
+    # warning level 4 and all warnings as errors
+    add_compile_options(/W4 /WX)
+else()
+    # lots of warnings and all warnings as errors
+    add_compile_options(-Wall -Wextra -pedantic -Werror)
+endif()
+
+# описываем основную библиотеку, т.е. библиотеку, содержащую все cpp-файлы, кроме main.cpp
+# TODO: отредактировать список cpp-файлов
+add_library(corelib OBJECT task1.cpp task2.cpp)
+
+# описываем исполняемый файл основной программы: это main.cpp + основная библиотека
+add_executable(${exe_name} main.cpp)
+target_link_libraries(${exe_name} corelib)
 
 # ========== все, что ниже, относится к тестированию при помощи GoogleTest ==========
 
