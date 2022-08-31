@@ -1,11 +1,8 @@
-
-#include "task1.h"
+#pragma once
 
 // TODO: переименовать пространство имен
 namespace task {
 
-int plus(int x, int y) {
-    return x+y;
-}
+int plus(int x, int y);
 
 }

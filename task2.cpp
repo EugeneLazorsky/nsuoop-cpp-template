@@ -1,12 +1,12 @@
 
-#include "task.h"
+#include "task2.h"
 #include <iostream>
 
 // TODO: переименовать пространство имен
 namespace task {
 
-void say_hello() {
-    std::cout << "Hello, world!\n";
+std::string say_hello(std::string_view name) {
+    return "Hello, " + std::string(name) + "!";
 }
 
 }

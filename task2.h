@@ -1,10 +1,11 @@
 #pragma once
 
+#include <string>
+#include <string_view>
+
 // TODO: переименовать пространство имен
 namespace task {
 
-int plus(int x, int y);
-
-void say_hello();
+std::string say_hello(std::string_view name);
 
 }

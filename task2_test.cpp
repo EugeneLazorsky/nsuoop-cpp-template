@@ -1,14 +1,14 @@
 
-#include "task.h"
+#include "task2.h"
 #include "gtest/gtest.h"
 
 namespace {
 
 // TODO: переименовать тесты, написать реализации
-TEST(TaskTest, plus) {
-    using task::plus;
+TEST(TaskTest, say_hello) {
+    using task::say_hello;
 
-    EXPECT_EQ(plus(2, 3), 5);
+    EXPECT_EQ(say_hello("world"), "Hello, world!");
 }
 
 }

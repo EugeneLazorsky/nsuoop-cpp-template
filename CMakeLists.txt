@@ -1,11 +1,15 @@
 
 cmake_minimum_required(VERSION 3.14)
 
+# задаем используемый стандарт С++
+set(CMAKE_CXX_STANDARD 17)
+
 # TODO: переименовать проект
 project(nsuoop-cpp-template)
 
-# задаем используемый стандарт С++
-set(CMAKE_CXX_STANDARD 17)
+# описываем основную библиотеку, т.е. библиотеку, содержащую все cpp-файлы, кроме main.cpp
+# TODO: отредактировать список cpp-файлов
+add_library(corelib OBJECT task1.cpp task2.cpp)
 
 # задаем имя исполняемого файла основной программы
 set(exe_name ${PROJECT_NAME})
@@ -13,13 +17,17 @@ set(exe_name ${PROJECT_NAME})
 # задаем имя исполняемого файла программы для запуска тестов
 set(test_name test)
 
-# описываем основную библиотеку, т.е. библиотеку, содержащую весь код, кроме функции main (main.cpp)
-# TODO: отредактировать список cpp-файлов
-add_library(mainlib OBJECT task1.cpp task2.cpp)
-
 # описываем исполняемый файл основной программы: это main.cpp + основная библиотека
 add_executable(${exe_name} main.cpp)
-target_link_libraries(${exe_name} mainlib)
+target_link_libraries(${exe_name} corelib)
+
+# Включаем отслеживание всех предупреждений (warnings) и запрещаем компиляцию при наличии предупреждений.
+# Считается хорошим тоном, когда программа собирается без предупрреждений.
+# Но вы можете убрать /WX и -Werror (разрешив компиляцию с предупреждениями), если сможете разумно объяснить своё решение.
+target_compile_options(${exe_name} PRIVATE
+  $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
+  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
+)
 
 # ========== все, что ниже, относится к тестированию при помощи GoogleTest ==========
 
@@ -34,7 +42,8 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-# описываем исполняемый файл программы для запуска тестов: это task_test.cpp + основная библиотека + библиотека gtest_main
-add_executable(${test_name} task_test.cpp)
+# описываем исполняемый файл программы для запуска тестов: это cpp-файлы тестов + основная библиотека + библиотека gtest_main
+# наш собственный main.cpp здесь не нужен, т.к. функция main реализована в gtest_main
+add_executable(${test_name} task1_test.cpp task2_test.cpp)
 target_link_libraries(${test_name} gtest_main)
-target_link_libraries(${test_name} mainlib)
+target_link_libraries(${test_name} corelib)
